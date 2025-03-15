@@ -1,0 +1,68 @@
+﻿using API_Hospital.DataAccess.Abstracts;
+using API_Hospital.Models;
+using API_Hospital.Models.Dtos.Patient;
+using API_Hospital.Services.Abstracts;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
+
+namespace API_Hospital.Services.Concretes
+{
+    public class PatientService : IPatientService
+    {
+        private IPatientRepository _patientRepository;
+        public PatientService(IPatientRepository patientRepository)
+        {
+            _patientRepository = patientRepository;
+        }
+        public void Add(PatientAddRequestDto dto)
+        {
+            Patient patient = ConvertToPatient(dto);
+            _patientRepository.Add(patient);
+        }
+
+        public void Delete(int id)
+        {
+            Patient patient = _patientRepository.GetById(id);
+            _patientRepository.Delete(patient);
+        }
+
+        public List<PatientResponseDto> GetAll()
+        {
+            List<Patient> patients = _patientRepository.GetAll();
+            List<PatientResponseDto> responses = ConvertToResponseDtoList(patients);
+            return responses;
+        }
+
+        public PatientResponseDto? GetById(int id)
+        {
+            Patient patient = _patientRepository.GetById(id);
+            PatientResponseDto response = ConvertToResponseDto(patient);
+            return response;
+        }
+
+        private Patient ConvertToPatient(PatientAddRequestDto dto)
+        {
+            return new Patient
+            {
+                Name = dto.Name,
+                Surname = dto.Surname,
+                BirthDate = new DateTime(dto.BirthDate.Year, dto.BirthDate.Month, dto.BirthDate.Day),
+            };
+        }
+
+        private PatientResponseDto ConvertToResponseDto(Patient patient)
+        {
+            return new PatientResponseDto
+            {
+                Id = patient.Id,
+                Name = patient.Name,
+                Surname = patient.Surname,
+                BirthDate = new DateTime(patient.BirthDate.Year, patient.BirthDate.Month, patient.BirthDate.Day),
+            };
+        }
+
+        private List<PatientResponseDto> ConvertToResponseDtoList(List<Patient> patients)
+        {
+            return patients.Select(x => ConvertToResponseDto(x)).ToList();
+        }
+    }
+}

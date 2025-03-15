@@ -1,0 +1,63 @@
+﻿using API_Hospital.DataAccess.Abstracts;
+using API_Hospital.Models;
+using API_Hospital.Models.Dtos.Doctors;
+using API_Hospital.Services.Abstracts;
+
+namespace API_Hospital.Services.Concretes;
+
+public class DoctorService : IDoctorService
+{
+    IDoctorRepository _doctorRepository;
+    public DoctorService(IDoctorRepository doctorRepository)
+    {
+        _doctorRepository = doctorRepository;
+    }
+    public void Add(DoctorAddRequestDto dto)
+    {
+        Doctor doctor = ConvertToDoctor(dto);
+        _doctorRepository.Add(doctor);
+    }
+
+    public void Delete(int id)
+    {
+        Doctor doctor = _doctorRepository.GetById(id);
+        _doctorRepository.Delete(doctor);
+    }
+
+    public List<DoctorResponseDto> GetAll()
+    {
+        List<Doctor> doctors = _doctorRepository.GetAll();
+        List<DoctorResponseDto> response = ConvertToResponseDtoList(doctors);
+        return response;
+    }
+
+    public DoctorResponseDto? GetById(int id)
+    {
+        Doctor doctor = _doctorRepository.GetById(id);
+        DoctorResponseDto response = ConvertToResponseDto(doctor);
+        return response;
+    }
+    private Doctor ConvertToDoctor(DoctorAddRequestDto dto)
+    {
+        return new Doctor
+        {
+            Name = dto.Name,
+            Surname = dto.Surname,
+            Branch = dto.Branch,
+        };
+    }
+    private DoctorResponseDto ConvertToResponseDto(Doctor doctor)
+    {
+        return new DoctorResponseDto
+        {
+            Id = doctor.Id,
+            Name = doctor.Name,
+            Surname = doctor.Surname,
+            Branch = doctor.Branch,
+        };
+    }
+    private List<DoctorResponseDto> ConvertToResponseDtoList(List<Doctor> doctors)
+    {
+        return doctors.Select(x => ConvertToResponseDto(x)).ToList();
+    }
+}
