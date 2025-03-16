@@ -32,4 +32,10 @@ public class DoctorRepository : IDoctorRepository
     {
         return _context.Doctors.Find(id);
     }
+
+    public void Update(Doctor doctor)
+    {
+        _context.Doctors.Update(doctor);
+        _context.SaveChanges();
+    }
 }

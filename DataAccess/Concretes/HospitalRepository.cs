@@ -34,4 +34,10 @@ public class HospitalRepository : IHospitalRepository
     {
         return _context.Hospitals.Find(id);
     }
+
+    public void Update(Hospital hospital)
+    {
+        _context.Hospitals.Update(hospital);
+        _context.SaveChanges();
+    }
 }

@@ -8,4 +8,6 @@ public interface IAppointmentRepository
     void Delete(Appointment appointment);
     Appointment? GetById(int id);
     List<Appointment>? GetAll();
+    void Update(Appointment appointment);
+
 }

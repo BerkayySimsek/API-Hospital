@@ -1,4 +1,5 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
+using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Doctors;
 using API_Hospital.Services.Abstracts;
@@ -37,6 +38,24 @@ public class DoctorService : IDoctorService
         DoctorResponseDto response = ConvertToResponseDto(doctor);
         return response;
     }
+
+    public void Update(DoctorUpdateRequestDto dto)
+    {
+        Doctor doctor = _doctorRepository.GetById(dto.Id);
+        if (doctor != null)
+        {
+            doctor.Name = dto.Name;
+            doctor.Surname = dto.Surname;
+            doctor.Branch = dto.Branch;
+
+            _doctorRepository.Update(doctor);
+        }
+        else
+        {
+            throw new Exception("Doktor Bulunamadı.");
+        }
+    }
+
     private Doctor ConvertToDoctor(DoctorAddRequestDto dto)
     {
         return new Doctor

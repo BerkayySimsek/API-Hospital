@@ -1,6 +1,8 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
+using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Hospital;
+using API_Hospital.Models.Dtos.Hospitals;
 using API_Hospital.Services.Abstracts;
 
 namespace API_Hospital.Services.Concretes;
@@ -38,6 +40,25 @@ public class HospitalService : IHospitalService
         Hospital hospital = _hospitalRepository.GetById(convertId);
         HospitalResponseDto response = ConvertToResponseDto(hospital);
         return response;
+    }
+
+    public void Update(HospitalUpdateRequestDto dto)
+    {
+        Guid convertId = new Guid(dto.Id);
+        Hospital hospital= _hospitalRepository.GetById(convertId);
+        if (hospital != null)
+        {
+            hospital.Id = convertId;
+            hospital.Name = dto.Name;
+            hospital.City = dto.City;
+            hospital.Address = dto.Address;
+
+            _hospitalRepository.Update(hospital);
+        }
+        else
+        {
+            throw new Exception("Hastane Bulunamadı.");
+        }
     }
 
     private Hospital ConvertToHospital(HospitalAddRequestDto dto)

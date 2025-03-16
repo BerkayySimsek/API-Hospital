@@ -1,6 +1,7 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
 using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models.Dtos.Patient;
+using API_Hospital.Models.Dtos.Patients;
 using API_Hospital.Services.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,5 +42,12 @@ public class PatientsController : Controller
     {
         _patientService.Delete(id);
         return Ok("Hasta Silindi.");
+    }
+
+    [HttpPut("update")]
+    public IActionResult Update(PatientUpdateRequestDto dto)
+    {
+        _patientService.Update(dto);
+        return Ok("Güncelleme Başarılı.");
     }
 }

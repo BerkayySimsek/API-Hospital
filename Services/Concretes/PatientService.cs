@@ -1,8 +1,8 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Patient;
+using API_Hospital.Models.Dtos.Patients;
 using API_Hospital.Services.Abstracts;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 
 namespace API_Hospital.Services.Concretes
 {
@@ -37,6 +37,23 @@ namespace API_Hospital.Services.Concretes
             Patient patient = _patientRepository.GetById(id);
             PatientResponseDto response = ConvertToResponseDto(patient);
             return response;
+        }
+
+        public void Update(PatientUpdateRequestDto dto)
+        {
+            Patient patient = _patientRepository.GetById(dto.Id);
+            if (patient!=null)
+            {
+                patient.Name = dto.Name;
+                patient.Surname = dto.Surname;
+                patient.BirthDate = dto.BirthDate;
+                
+                _patientRepository.Update(patient);
+            }
+            else
+            {
+                throw new Exception("Hasta Bulunamadı.");
+            }
         }
 
         private Patient ConvertToPatient(PatientAddRequestDto dto)

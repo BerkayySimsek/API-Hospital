@@ -1,4 +1,5 @@
 ﻿using API_Hospital.Models.Dtos.Appointment;
+using API_Hospital.Models.Dtos.Appointments;
 using API_Hospital.Services.Abstracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,13 @@ namespace API_Hospital.Controllers
         {
             _appointmentService.Delete(id);
             return Ok("Randevu başarıyla silindi.");
+        }
+
+        [HttpPut("update")]
+        public IActionResult Update(AppointmentUpdateRequestDto dto)
+        {
+            _appointmentService.Update(dto);
+            return Ok("Güncelleme başarılı");
         }
     }
 }

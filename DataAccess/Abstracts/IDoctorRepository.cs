@@ -8,4 +8,5 @@ public interface IDoctorRepository
     void Delete(Doctor doctor);
     Doctor? GetById(int id);
     List<Doctor>? GetAll();
+    void Update(Doctor doctor);
 }

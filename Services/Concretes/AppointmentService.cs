@@ -2,6 +2,7 @@
 using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Appointment;
+using API_Hospital.Models.Dtos.Appointments;
 using API_Hospital.Services.Abstracts;
 
 namespace API_Hospital.Services.Concretes;
@@ -38,6 +39,22 @@ public class AppointmentService : IAppointmentService
         AppointmentResponseDto dto = ConvertToResponseDto(appointment);
         return dto;
     }
+
+    public void Update(AppointmentUpdateRequestDto dto)
+    {
+        Appointment appointment = _appointmentRepository.GetById(dto.Id);
+        if (appointment!=null)
+        {
+            appointment.Id = dto.Id;
+            appointment.PatientId = dto.PatientId;
+            appointment.DoctorId = dto.DoctorId;
+            appointment.AppointmentDate = dto.AppointmentDate;
+            appointment.Notes = dto.Notes;
+
+            _appointmentRepository.Update(appointment);
+        }
+    }
+
     private Appointment ConvertToAppointment(AppointmentAddRequestDto dto)
     {
         return new Appointment

@@ -35,4 +35,10 @@ public class AppointmentRepository : IAppointmentRepository
         Appointment? appointment = _context.Appointments.Include(x => x.Doctor).Include(y => y.Patient).SingleOrDefault(X => X.Id == id);
         return appointment;
     }
+
+    public void Update(Appointment appointment)
+    {
+        _context.Update(appointment);
+        _context.SaveChanges();
+    }
 }

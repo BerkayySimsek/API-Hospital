@@ -8,5 +8,6 @@ public interface IHospitalRepository
     void Delete(Hospital hospital);
     Hospital? GetById(Guid id);
     List<Hospital>? GetAll();
+    void Update(Hospital hospital);
 
 }

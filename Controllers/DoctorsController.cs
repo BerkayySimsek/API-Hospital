@@ -40,5 +40,12 @@ namespace API_Hospital.Controllers
             _doctorService.Delete(id);
             return Ok("Doktor silindi.");
         }
+
+        [HttpPut("update")]
+        public IActionResult Update(DoctorUpdateRequestDto dto)
+        {
+            _doctorService.Update(dto);
+            return Ok("Güncelleme Başarılı.");
+        }
     }
 }
