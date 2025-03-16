@@ -28,7 +28,7 @@ public class AppointmentService : IAppointmentService
 
     public List<AppointmentResponseDto> GetAll()
     {
-        List<Appointment> appointments=_appointmentRepository.GetAll();
+        List<Appointment> appointments = _appointmentRepository.GetAll();
         List<AppointmentResponseDto> response = ConvertToResponseDtoList(appointments);
         return response;
     }
@@ -43,7 +43,7 @@ public class AppointmentService : IAppointmentService
     public void Update(AppointmentUpdateRequestDto dto)
     {
         Appointment appointment = _appointmentRepository.GetById(dto.Id);
-        if (appointment!=null)
+        if (appointment != null)
         {
             appointment.Id = dto.Id;
             appointment.PatientId = dto.PatientId;
