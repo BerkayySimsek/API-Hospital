@@ -1,4 +1,5 @@
-﻿using API_Hospital.Models.Dtos.Appointment;
+﻿using API_Hospital.Exceptions.Types;
+using API_Hospital.Models.Dtos.Appointment;
 using API_Hospital.Models.Dtos.Appointments;
 using API_Hospital.Services.Abstracts;
 using Microsoft.AspNetCore.Http;
@@ -19,14 +20,34 @@ namespace API_Hospital.Controllers
         [HttpPost("add")]
         public IActionResult Add(AppointmentAddRequestDto dto)
         {
-            _appointmentService.Add(dto);
-            return Ok("Randevu oluşturuldu.");
+            try
+            {
+                _appointmentService.Add(dto);
+                return Ok("Randevu oluşturuldu.");
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
-            return Ok(_appointmentService.GetById(id));
+            try
+            {
+                return Ok(_appointmentService.GetById(id));
+
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet("getall")]

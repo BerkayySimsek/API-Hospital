@@ -1,21 +1,27 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
-using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Hospital;
 using API_Hospital.Models.Dtos.Hospitals;
 using API_Hospital.Services.Abstracts;
+using API_Hospital.Services.BusinessRules;
+using API_Hospital.Services.ValidationRules;
 
 namespace API_Hospital.Services.Concretes;
 
 public class HospitalService : IHospitalService
 {
     private IHospitalRepository _hospitalRepository;
-    public HospitalService(IHospitalRepository hospitalRepository)
+    private HospitalBusinessRules _hospitalBusinessRules;
+
+    public HospitalService(IHospitalRepository hospitalRepository, HospitalBusinessRules hospitalBusinessRules)
     {
         _hospitalRepository = hospitalRepository;
+        _hospitalBusinessRules = hospitalBusinessRules;
     }
+
     public void Add(HospitalAddRequestDto dto)
     {
+        HospitalValidationRules.HospitalAddValidator(dto);
         Hospital hospital = ConvertToHospital(dto);
         _hospitalRepository.Add(hospital);
     }
@@ -38,6 +44,7 @@ public class HospitalService : IHospitalService
     {
         Guid convertId = new Guid(id);
         Hospital hospital = _hospitalRepository.GetById(convertId);
+        _hospitalBusinessRules.HospitalNotFound(hospital);
         HospitalResponseDto response = ConvertToResponseDto(hospital);
         return response;
     }
@@ -45,7 +52,7 @@ public class HospitalService : IHospitalService
     public void Update(HospitalUpdateRequestDto dto)
     {
         Guid convertId = new Guid(dto.Id);
-        Hospital hospital= _hospitalRepository.GetById(convertId);
+        Hospital hospital = _hospitalRepository.GetById(convertId);
         if (hospital != null)
         {
             hospital.Id = convertId;

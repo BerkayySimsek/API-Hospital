@@ -1,20 +1,26 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
-using API_Hospital.DataAccess.Concretes;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Doctors;
 using API_Hospital.Services.Abstracts;
+using API_Hospital.Services.BusinessRules;
+using API_Hospital.Services.ValidationRules;
 
 namespace API_Hospital.Services.Concretes;
 
 public class DoctorService : IDoctorService
 {
-    IDoctorRepository _doctorRepository;
-    public DoctorService(IDoctorRepository doctorRepository)
+    private IDoctorRepository _doctorRepository;
+    private DoctorBusinessRules _doctorBusinessRules;
+
+    public DoctorService(IDoctorRepository doctorRepository, DoctorBusinessRules doctorBusinessRules)
     {
         _doctorRepository = doctorRepository;
+        _doctorBusinessRules = doctorBusinessRules;
     }
+
     public void Add(DoctorAddRequestDto dto)
     {
+        DoctorValidationRules.DoctorAddValidator(dto);
         Doctor doctor = ConvertToDoctor(dto);
         _doctorRepository.Add(doctor);
     }
@@ -35,6 +41,7 @@ public class DoctorService : IDoctorService
     public DoctorResponseDto? GetById(int id)
     {
         Doctor doctor = _doctorRepository.GetById(id);
+        _doctorBusinessRules.DoctorNotFound(doctor);
         DoctorResponseDto response = ConvertToResponseDto(doctor);
         return response;
     }

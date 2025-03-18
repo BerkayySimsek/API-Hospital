@@ -2,6 +2,7 @@ using API_Hospital.DataAccess.Abstracts;
 using API_Hospital.DataAccess.Concretes;
 using API_Hospital.DataAccess.Contexts;
 using API_Hospital.Services.Abstracts;
+using API_Hospital.Services.BusinessRules;
 using API_Hospital.Services.Concretes;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,14 +17,24 @@ builder.Services.AddSwaggerGen();
 // IoC Kayýtlarý
 builder.Services.AddScoped<SqlDbContext>();
 builder.Services.AddScoped<MongoDbContext>();
+
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IHospitalRepository, HospitalRepository>();
+builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+
+
 builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IHospitalService, HospitalService>();
-builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
-builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 builder.Services.AddScoped<IAppointmentService, AppointmentService>();
+
+builder.Services.AddScoped<DoctorBusinessRules>();
+builder.Services.AddScoped<HospitalBusinessRules>();
+builder.Services.AddScoped<AppointmentBusinessRules>();
+builder.Services.AddScoped<PatientBusinessRules>();
+
+
 
 var app = builder.Build();
 

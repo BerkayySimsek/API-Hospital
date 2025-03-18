@@ -1,8 +1,6 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
 using API_Hospital.DataAccess.Contexts;
 using API_Hospital.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
-using ZstdSharp.Unsafe;
 
 namespace API_Hospital.DataAccess.Concretes;
 

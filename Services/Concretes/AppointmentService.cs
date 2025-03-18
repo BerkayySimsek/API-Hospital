@@ -4,18 +4,25 @@ using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Appointment;
 using API_Hospital.Models.Dtos.Appointments;
 using API_Hospital.Services.Abstracts;
+using API_Hospital.Services.BusinessRules;
+using API_Hospital.Services.ValidationRules;
 
 namespace API_Hospital.Services.Concretes;
 
 public class AppointmentService : IAppointmentService
 {
-    IAppointmentRepository _appointmentRepository;
-    public AppointmentService(IAppointmentRepository appointmentRepository)
+    private IAppointmentRepository _appointmentRepository;
+    private AppointmentBusinessRules _appointmentBusinessRules;
+
+    public AppointmentService(IAppointmentRepository appointmentRepository, AppointmentBusinessRules appointmentBusinessRules)
     {
         _appointmentRepository = appointmentRepository;
+        _appointmentBusinessRules = appointmentBusinessRules;
     }
+
     public void Add(AppointmentAddRequestDto dto)
     {
+        AppointmentValidationRules.AppointmentAddValidator(dto);
         Appointment appointment = ConvertToAppointment(dto);
         _appointmentRepository.Add(appointment);
     }
@@ -36,6 +43,7 @@ public class AppointmentService : IAppointmentService
     public AppointmentResponseDto? GetById(int id)
     {
         Appointment appointment = _appointmentRepository.GetById(id);
+        _appointmentBusinessRules.AppointmentNotFound(appointment);
         AppointmentResponseDto dto = ConvertToResponseDto(appointment);
         return dto;
     }
@@ -57,6 +65,7 @@ public class AppointmentService : IAppointmentService
 
     private Appointment ConvertToAppointment(AppointmentAddRequestDto dto)
     {
+
         return new Appointment
         {
             PatientId = dto.PatientId,

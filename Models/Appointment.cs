@@ -1,4 +1,6 @@
-﻿namespace API_Hospital.Models;
+﻿using MongoDB.Bson.Serialization.Attributes;
+
+namespace API_Hospital.Models;
 
 public class Appointment
 {

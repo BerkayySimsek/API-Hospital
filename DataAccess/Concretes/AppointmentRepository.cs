@@ -2,16 +2,19 @@
 using API_Hospital.DataAccess.Contexts;
 using API_Hospital.Models;
 using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 
 namespace API_Hospital.DataAccess.Concretes;
 
 public class AppointmentRepository : IAppointmentRepository
 {
     SqlDbContext _context;
+
     public AppointmentRepository(SqlDbContext context)
     {
         _context = context;
     }
+
     public void Add(Appointment appointment)
     {
         _context.Entry(appointment).State = EntityState.Added;

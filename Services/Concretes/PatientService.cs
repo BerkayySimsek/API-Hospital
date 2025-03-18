@@ -3,18 +3,25 @@ using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Patient;
 using API_Hospital.Models.Dtos.Patients;
 using API_Hospital.Services.Abstracts;
+using API_Hospital.Services.BusinessRules;
+using API_Hospital.Services.ValidationRules;
 
 namespace API_Hospital.Services.Concretes
 {
     public class PatientService : IPatientService
     {
         private IPatientRepository _patientRepository;
-        public PatientService(IPatientRepository patientRepository)
+        private PatientBusinessRules _patientBusinessRules;
+
+        public PatientService(IPatientRepository patientRepository, PatientBusinessRules patientBusinessRules)
         {
             _patientRepository = patientRepository;
+            _patientBusinessRules = patientBusinessRules;
         }
+
         public void Add(PatientAddRequestDto dto)
         {
+            PatientValidatorRules.PatientAddValidator(dto);
             Patient patient = ConvertToPatient(dto);
             _patientRepository.Add(patient);
         }
@@ -35,6 +42,7 @@ namespace API_Hospital.Services.Concretes
         public PatientResponseDto? GetById(int id)
         {
             Patient patient = _patientRepository.GetById(id);
+            _patientBusinessRules.PatientNotFound(patient);
             PatientResponseDto response = ConvertToResponseDto(patient);
             return response;
         }
@@ -42,12 +50,12 @@ namespace API_Hospital.Services.Concretes
         public void Update(PatientUpdateRequestDto dto)
         {
             Patient patient = _patientRepository.GetById(dto.Id);
-            if (patient!=null)
+            if (patient != null)
             {
                 patient.Name = dto.Name;
                 patient.Surname = dto.Surname;
                 patient.BirthDate = dto.BirthDate;
-                
+
                 _patientRepository.Update(patient);
             }
             else

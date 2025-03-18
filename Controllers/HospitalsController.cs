@@ -1,4 +1,5 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
+using API_Hospital.Exceptions.Types;
 using API_Hospital.Models;
 using API_Hospital.Models.Dtos.Hospital;
 using API_Hospital.Models.Dtos.Hospitals;
@@ -19,14 +20,34 @@ public class HospitalsController : Controller
     [HttpPost("add")]
     public IActionResult Add(HospitalAddRequestDto dto)
     {
-        _hospitalService.Add(dto);
-        return Ok("Hastane Eklendi.");
+        try
+        {
+            _hospitalService.Add(dto);
+            return Ok("Hastane Eklendi.");
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
     }
 
     [HttpGet("getbyid")]
     public IActionResult GetById(string id)
     {
-        return Ok(_hospitalService.GetById(id));
+        try
+        {
+            return Ok(_hospitalService.GetById(id));
+
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpGet("getall")]

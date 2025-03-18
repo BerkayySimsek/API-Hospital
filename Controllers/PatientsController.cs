@@ -1,5 +1,6 @@
 ﻿using API_Hospital.DataAccess.Abstracts;
 using API_Hospital.DataAccess.Concretes;
+using API_Hospital.Exceptions.Types;
 using API_Hospital.Models.Dtos.Patient;
 using API_Hospital.Models.Dtos.Patients;
 using API_Hospital.Services.Abstracts;
@@ -21,14 +22,34 @@ public class PatientsController : Controller
     [HttpPost("add")]
     public IActionResult Add(PatientAddRequestDto dto)
     {
-        _patientService.Add(dto);
-        return Ok("Hasta Eklendi.");
+        try
+        {
+            _patientService.Add(dto);
+            return Ok("Hasta Eklendi.");
+        }
+        catch (BusinessException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
     }
 
     [HttpGet("getbyid")]
     public IActionResult GetById(int id)
     {
-        return Ok(_patientService.GetById(id));
+        try
+        {
+            return Ok(_patientService.GetById(id));
+
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
     }
 
     [HttpGet("getall")]
